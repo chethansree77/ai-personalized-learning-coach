@@ -120,18 +120,36 @@ generating study plans, practising questions, and reviewing performance.
 ai-personalized-learning-coach/
 │
 ├── app.py
+│
 ├── pages/
-│   ├── 01_Learner_Setup.py
-│   ├── 02_Study_Plan.py
-│   ├── 03_Practice_Quiz.py
-│   ├── 04_Quiz_History.py
+│   ├── 02_Learner_Setup.py
+│   ├── 03_Study_Plan.py
+│   ├── 04_Practice_Quiz.py
+│   ├── 05_Quiz_History.py
 │   └── 06_Learning_Dashboard.py
+│
+├── services/
+│   ├── demo_quiz_service.py
+│   ├── gemini_service.py
+│   ├── quiz_service.py
+│   ├── report_generator.py
+│   └── study_plan_service.py
+│
+├── database/
+│   └── db.py
 │
 ├── assets/
 │   └── style.css
 │
-├── database/
-│   └── db.py
+├── screenshots/
+│   ├── home.png
+│   ├── learner_setup.png
+│   ├── study_plan.png
+│   ├── practice_quiz.png
+│   ├── quiz_history.png
+│   └── dashboard.png
+│
+├── utils/
 │
 ├── .env.example
 ├── .gitignore
@@ -244,6 +262,17 @@ can continue as the project develops.
     performance.
 -   Add more detailed progress visualizations.
 -   Explore deployment so the application can be accessed online.
+
+## Latest Update
+
+### 📄 Downloadable PDF Learning Progress Report
+
+- Generate personalized PDF progress reports.
+- View learner profile and learning goals.
+- Track completed and remaining study days.
+- Review quiz scores and average accuracy.
+- Access quiz attempt history.
+- Download reports directly from the Learning Dashboard.
 
 ## Author
 
