@@ -251,19 +251,3 @@ can continue as the project develops.
 
 GitHub: https://github.com/chethansree77
 
-## Application Screenshots
-
-### 1. Home Page
-![Home Page](screenshots/home.png)
-
-### 2. Learner Setup
-![Learner Setup](screenshots/learner_setup.png)
-
-### 3. Study Plan
-![Study Plan](screenshots/study_plan.png)
-
-### 4. Practice Quiz
-![Practice Quiz](screenshots/practice_quiz.png)
-
-### 5. Learning Dashboard
-![Learning Dashboard](screenshots/dashboard.png)
