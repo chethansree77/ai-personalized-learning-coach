@@ -294,5 +294,8 @@ GitHub: https://github.com/chethansree77
 ### 4. Practice Quiz
 ![Practice Quiz](screenshots/practice_quiz.png)
 
-### 5. Learning Dashboard
+### 5. Quiz History
+![Quiz History](screenshots/quiz_history.png)
+
+### 6. Learning Dashboard
 ![Learning Dashboard](screenshots/dashboard.png)
