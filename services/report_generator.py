@@ -1,12 +1,12 @@
 
 from io import BytesIO
 from datetime import datetime
+from xml.sax.saxutils import escape
 
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import inch
 from reportlab.platypus import (
     SimpleDocTemplate,
     Paragraph,
@@ -59,6 +59,23 @@ def generate_progress_report(
 
     normal_style = styles["BodyText"]
 
+    cell_style = ParagraphStyle(
+        "TableCell",
+        parent=normal_style,
+        fontName="Helvetica",
+        fontSize=9,
+        leading=13,
+        textColor=colors.black,
+        wordWrap="CJK"
+    )
+
+    header_style = ParagraphStyle(
+        "TableHeader",
+        parent=cell_style,
+        textColor=colors.white,
+        fontName="Helvetica-Bold"
+    )
+
     story = []
 
     # Report title
@@ -85,26 +102,61 @@ def generate_progress_report(
         spaceAfter=10
     ))
 
-    # Learner details
-    story.append(Paragraph("1. Learner Details", heading_style))
+    # 1. Learner Details
+    story.append(
+        Paragraph("1. Learner Details", heading_style)
+    )
 
     learner_data = [
-        ["Field", "Details"],
-        ["Subject", str(learner.get("subject", "N/A"))],
-        ["Learning Goal", str(learner.get("learning_goal", "N/A"))],
-        ["Current Level", str(learner.get("current_level", "N/A"))],
-        ["Target Duration", f"{learner.get('target_days', 0)} days"],
-        ["Daily Study Time", f"{learner.get('daily_hours', 0)} hours"]
+        [
+            Paragraph("Field", header_style),
+            Paragraph("Details", header_style)
+        ],
+        [
+            Paragraph("Subject", cell_style),
+            Paragraph(
+                escape(str(learner.get("subject", "N/A"))),
+                cell_style
+            )
+        ],
+        [
+            Paragraph("Learning Goal", cell_style),
+            Paragraph(
+                escape(str(learner.get("learning_goal", "N/A"))),
+                cell_style
+            )
+        ],
+        [
+            Paragraph("Current Level", cell_style),
+            Paragraph(
+                escape(str(learner.get("current_level", "N/A"))),
+                cell_style
+            )
+        ],
+        [
+            Paragraph("Target Duration", cell_style),
+            Paragraph(
+                f"{learner.get('target_days', 0)} days",
+                cell_style
+            )
+        ],
+        [
+            Paragraph("Daily Study Time", cell_style),
+            Paragraph(
+                f"{learner.get('daily_hours', 0)} hours",
+                cell_style
+            )
+        ]
     ]
 
     learner_table = Table(
         learner_data,
-        colWidths=[150, 330]
+        colWidths=[150, 330],
+        repeatRows=1
     )
 
     learner_table.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#4338CA")),
-        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
         ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#D1D5DB")),
         ("PADDING", (0, 0), (-1, -1), 8),
         ("VALIGN", (0, 0), (-1, -1), "TOP"),
@@ -113,13 +165,17 @@ def generate_progress_report(
 
     story.append(learner_table)
 
-    # Study progress
-    story.append(Paragraph("2. Study Progress", heading_style))
+    # 2. Study Progress
+    story.append(
+        Paragraph("2. Study Progress", heading_style)
+    )
 
     total_days = len(study_progress)
+
     completed_days = sum(
         1 for completed in study_progress.values() if completed
     )
+
     remaining_days = max(total_days - completed_days, 0)
 
     completion_percentage = (
@@ -128,11 +184,26 @@ def generate_progress_report(
     )
 
     progress_data = [
-        ["Metric", "Result"],
-        ["Total Study Days", str(total_days)],
-        ["Completed Days", str(completed_days)],
-        ["Remaining Days", str(remaining_days)],
-        ["Completion Percentage", f"{completion_percentage:.1f}%"]
+        [
+            Paragraph("Metric", header_style),
+            Paragraph("Result", header_style)
+        ],
+        [
+            Paragraph("Total Study Days", cell_style),
+            Paragraph(str(total_days), cell_style)
+        ],
+        [
+            Paragraph("Completed Days", cell_style),
+            Paragraph(str(completed_days), cell_style)
+        ],
+        [
+            Paragraph("Remaining Days", cell_style),
+            Paragraph(str(remaining_days), cell_style)
+        ],
+        [
+            Paragraph("Completion Percentage", cell_style),
+            Paragraph(f"{completion_percentage:.1f}%", cell_style)
+        ]
     ]
 
     progress_table = Table(
@@ -142,22 +213,26 @@ def generate_progress_report(
 
     progress_table.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0891B2")),
-        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
         ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#D1D5DB")),
-        ("PADDING", (0, 0), (-1, -1), 8)
+        ("PADDING", (0, 0), (-1, -1), 8),
+        ("VALIGN", (0, 0), (-1, -1), "TOP")
     ]))
 
     story.append(progress_table)
 
-    # Quiz performance
-    story.append(Paragraph("3. Quiz Performance", heading_style))
+    # 3. Quiz Performance
+    story.append(
+        Paragraph("3. Quiz Performance", heading_style)
+    )
 
     attempts = list(quiz_history)
 
     if attempts:
+
         total_score = sum(
             row["score"] for row in attempts
         )
+
         total_questions = sum(
             row["total_questions"] for row in attempts
         )
@@ -176,10 +251,22 @@ def generate_progress_report(
         )
 
         quiz_data = [
-            ["Metric", "Result"],
-            ["Total Quiz Attempts", str(len(attempts))],
-            ["Average Accuracy", f"{average_accuracy:.1f}%"],
-            ["Best Accuracy", f"{best_accuracy:.1f}%"]
+            [
+                Paragraph("Metric", header_style),
+                Paragraph("Result", header_style)
+            ],
+            [
+                Paragraph("Total Quiz Attempts", cell_style),
+                Paragraph(str(len(attempts)), cell_style)
+            ],
+            [
+                Paragraph("Average Accuracy", cell_style),
+                Paragraph(f"{average_accuracy:.1f}%", cell_style)
+            ],
+            [
+                Paragraph("Best Accuracy", cell_style),
+                Paragraph(f"{best_accuracy:.1f}%", cell_style)
+            ]
         ]
 
         quiz_table = Table(
@@ -189,21 +276,30 @@ def generate_progress_report(
 
         quiz_table.setStyle(TableStyle([
             ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#059669")),
-            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
             ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#D1D5DB")),
-            ("PADDING", (0, 0), (-1, -1), 8)
+            ("PADDING", (0, 0), (-1, -1), 8),
+            ("VALIGN", (0, 0), (-1, -1), "TOP")
         ]))
 
         story.append(quiz_table)
 
         story.append(Spacer(1, 10))
-        story.append(Paragraph("Quiz History", styles["Heading3"]))
+
+        story.append(
+            Paragraph("Quiz History", styles["Heading3"])
+        )
 
         history_data = [
-            ["Topic", "Score", "Accuracy", "Mode"]
+            [
+                Paragraph("Topic", header_style),
+                Paragraph("Score", header_style),
+                Paragraph("Accuracy", header_style),
+                Paragraph("Mode", header_style)
+            ]
         ]
 
         for row in attempts:
+
             score = row["score"]
             total = row["total_questions"]
 
@@ -213,10 +309,16 @@ def generate_progress_report(
             )
 
             history_data.append([
-                Paragraph(str(row["topic"]), normal_style),
-                f"{score}/{total}",
-                f"{accuracy:.1f}%",
-                str(row["quiz_mode"])
+                Paragraph(
+                    escape(str(row["topic"])),
+                    cell_style
+                ),
+                Paragraph(f"{score}/{total}", cell_style),
+                Paragraph(f"{accuracy:.1f}%", cell_style),
+                Paragraph(
+                    escape(str(row["quiz_mode"])),
+                    cell_style
+                )
             ])
 
         history_table = Table(
@@ -227,7 +329,6 @@ def generate_progress_report(
 
         history_table.setStyle(TableStyle([
             ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#334155")),
-            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
             ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#D1D5DB")),
             ("PADDING", (0, 0), (-1, -1), 7),
             ("VALIGN", (0, 0), (-1, -1), "TOP")
@@ -245,11 +346,13 @@ def generate_progress_report(
 
     # Footer message
     story.append(Spacer(1, 20))
+
     story.append(HRFlowable(
         width="100%",
         thickness=1,
         color=colors.HexColor("#C7D2FE")
     ))
+
     story.append(Spacer(1, 8))
 
     story.append(
