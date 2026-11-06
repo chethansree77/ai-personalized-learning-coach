@@ -1,0 +1,222 @@
+
+/* Welcome banner */
+.hero-banner {
+    background: linear-gradient(
+        120deg,
+        #7544C8,
+        #3478E5,
+        #E45AAB,
+        #F59B55
+    );
+
+    padding: 38px;
+    border-radius: 22px;
+    color: white;
+    margin-bottom: 28px;
+
+    box-shadow: 0 10px 28px rgba(80, 55, 160, 0.25);
+
+    transition: all 0.35s ease;
+}
+
+/* Strong hover effect */
+.hero-banner:hover {
+    transform: translateY(-7px) scale(1.015);
+
+    box-shadow: 0 18px 38px rgba(80, 55, 160, 0.38);
+}
+
+/* Main banner heading */
+.hero-banner h1 {
+    color: white;
+    font-size: 36px;
+    margin-bottom: 12px;
+}
+
+/* Banner subtitle */
+.hero-banner h3 {
+    color: #FFF0F8;
+    font-size: 23px;
+    margin-bottom: 12px;
+}
+
+/* Banner description */
+.hero-banner p {
+    color: white;
+    font-size: 16px;
+}
+
+/* Learning Journey section */
+.learning-section {
+    background: linear-gradient(
+        120deg,
+        #E8DFFF,
+        #DCEBFF,
+        #FFE1F0
+    );
+
+    padding: 28px;
+    border-radius: 20px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+
+    box-shadow: 0 8px 22px rgba(100, 80, 160, 0.16);
+
+    transition: all 0.35s ease;
+}
+
+/* Strong hover effect */
+.learning-section:hover {
+    transform: translateY(-7px) scale(1.015);
+
+    box-shadow: 0 16px 32px rgba(100, 80, 160, 0.28);
+}
+
+/* Section heading */
+.learning-section h2 {
+    color: #5836A3;
+    font-size: 26px;
+}
+
+/* Section description */
+.learning-section p {
+    color: #394567;
+    font-size: 16px;
+}
+
+/* Getting Started card */
+.getting-started {
+    background: linear-gradient(
+        120deg,
+        #FFE5B4,
+        #FFD6E8,
+        #E4D9FF
+    );
+
+    padding: 24px;
+    border-radius: 18px;
+    margin-top: 25px;
+
+    box-shadow: 0 8px 22px rgba(180, 100, 140, 0.18);
+
+    transition: all 0.35s ease;
+}
+
+/* Hover effect */
+.getting-started:hover {
+    transform: translateY(-7px) scale(1.015);
+
+    box-shadow: 0 16px 32px rgba(180, 100, 140, 0.3);
+}
+
+/* Message text */
+.getting-started p {
+    color: #633B73;
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Sidebar background */
+[data-testid="stSidebar"] {
+    background: linear-gradient(
+        180deg,
+        #5536A5,
+        #3478E5,
+        #D65AAB
+    );
+}
+
+/* Sidebar text */
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    color: white;
+}
+
+/* Sidebar spacing */
+[data-testid="stSidebar"] .block-container {
+    padding-top: 35px;
+}
+
+/* Sidebar welcome card */
+.sidebar-welcome {
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 15px;
+    padding: 16px;
+    margin-top: 15px;
+
+    transition: all 0.35s ease;
+}
+
+/* Sidebar card hover */
+.sidebar-welcome:hover {
+    background: rgba(255, 255, 255, 0.30);
+    transform: translateY(-5px) scale(1.04);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+}
+
+/* Sidebar welcome text */
+.sidebar-welcome p {
+    color: white !important;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.6;
+    margin: 5px 0;
+}
+
+/* Main page background */
+.stApp {
+    background: linear-gradient(
+        135deg,
+        #F5EEFF,
+        #EEF5FF,
+        #FFF0F7
+    );
+}
+
+/* Main content spacing */
+.block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+
+/* Main application title */
+.main-title {
+    font-size: 38px;
+    font-weight: 800;
+    display: inline-block;
+    margin-bottom: 18px;
+    transition: all 0.35s ease;
+}
+
+/* Keep emoji in its original colour */
+.title-emoji {
+    display: inline-block;
+    margin-right: 8px;
+}
+
+/* Gradient only on title text */
+.title-text {
+    background: linear-gradient(
+        90deg,
+        #7544C8,
+        #3478E5,
+        #E45AAB
+    );
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* Smooth hover effect */
+.main-title:hover {
+    transform: translateY(-3px);
+}
+
+
+
