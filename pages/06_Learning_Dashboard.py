@@ -114,21 +114,20 @@ h2, h3 {
     font-size: 1rem;
 }
 
-/* Progress bar */
-.stProgress > div > div > div > div {
-    background: linear-gradient(
-        90deg,
-        #7542D0,
-        #3978E8,
-        #DB55AC
-    );
-    border-radius: 20px;
+/* Single Study Progress Bar */
+[data-testid="stProgressBar"] {
+    width: 100% !important;
 }
 
-.stProgress > div > div {
-    background: #E8EAF5;
-    border-radius: 20px;
-    height: 12px;
+[data-testid="stProgressBar"] > div {
+    background: #E8EAF5 !important;
+    border-radius: 20px !important;
+    overflow: hidden !important;
+    height: 12px !important;
+}
+
+[data-testid="stProgressBar"] [role="progressbar"] {
+    border-radius: 20px !important;
 }
 
 /* Success, warning and information messages */
