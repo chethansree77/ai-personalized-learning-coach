@@ -22,7 +22,211 @@ from database.db import (
 from services.report_generator import generate_progress_report
 
 
-# Dashboard heading
+# --------------------------------------------------
+# DASHBOARD STYLING
+# --------------------------------------------------
+
+st.markdown("""
+<style>
+
+/* Main background */
+.stApp {
+    background: linear-gradient(
+        120deg,
+        #EEF2FF 0%,
+        #F5F0FF 55%,
+        #FFF0F7 100%
+    );
+}
+
+/* Main content spacing */
+.block-container {
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+}
+
+/* Main heading */
+h1 {
+    color: #5636A8 !important;
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+}
+
+/* Section headings */
+h2, h3 {
+    color: #5636A8 !important;
+    font-weight: 750 !important;
+}
+
+/* Text readability */
+.stApp p,
+.stApp label,
+.stApp [data-testid="stMarkdownContainer"] {
+    color: #26365C;
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+/* All bordered cards */
+[data-testid="stVerticalBlockBorderWrapper"] {
+    border: 1px solid #D8C5FF !important;
+    border-radius: 15px !important;
+    background: linear-gradient(
+        135deg,
+        rgba(247, 243, 255, 0.96),
+        rgba(232, 241, 255, 0.96)
+    ) !important;
+    box-shadow: 0 4px 12px rgba(83, 55, 160, 0.08);
+    transition: transform 0.25s ease,
+                box-shadow 0.25s ease,
+                border-color 0.25s ease;
+}
+
+[data-testid="stVerticalBlockBorderWrapper"]:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(83, 55, 160, 0.16);
+    border-color: #9870F5 !important;
+}
+
+/* Metric labels */
+[data-testid="stMetricLabel"] {
+    color: #5939A5 !important;
+    font-size: 1rem !important;
+    font-weight: 650 !important;
+}
+
+/* Metric values */
+[data-testid="stMetricValue"] {
+    color: #315FCA !important;
+    font-size: 2rem !important;
+    font-weight: 800 !important;
+}
+
+/* Select box */
+.stSelectbox div[data-baseweb="select"] {
+    border-radius: 10px;
+}
+
+.stSelectbox div[data-baseweb="select"] > div {
+    background: #F1F3FA;
+    border-radius: 10px;
+    min-height: 45px;
+    font-size: 1rem;
+}
+
+/* Progress bar */
+.stProgress > div > div > div > div {
+    background: linear-gradient(
+        90deg,
+        #7542D0,
+        #3978E8,
+        #DB55AC
+    );
+    border-radius: 20px;
+}
+
+.stProgress > div > div {
+    background: #E8EAF5;
+    border-radius: 20px;
+    height: 12px;
+}
+
+/* Success, warning and information messages */
+[data-testid="stAlert"] {
+    border-radius: 12px;
+    font-size: 1rem;
+}
+
+/* Recommendations */
+[data-testid="stAlert"] p {
+    font-size: 0.98rem !important;
+    line-height: 1.6;
+}
+
+/* Chart container */
+[data-testid="stVegaLiteChart"],
+[data-testid="stArrowVegaLiteChart"] {
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid #D8C5FF;
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 4px 12px rgba(83, 55, 160, 0.07);
+}
+
+/* Download button */
+.stDownloadButton button {
+    background: linear-gradient(
+        110deg,
+        #7542D0,
+        #3978E8,
+        #DB55AC
+    ) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 11px !important;
+    min-height: 48px;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    transition: all 0.25s ease;
+}
+
+.stDownloadButton button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(83, 55, 160, 0.22);
+}
+
+/* Dividers */
+hr {
+    border-color: #D5C7F2 !important;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Sidebar */
+[data-testid="stSidebar"] {
+    background: linear-gradient(
+        180deg,
+        #5036A6 0%,
+        #3475E2 55%,
+        #B75AB8 100%
+    );
+}
+
+[data-testid="stSidebar"] * {
+    color: white !important;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem !important;
+    }
+
+    h2, h3 {
+        font-size: 1.3rem !important;
+    }
+
+    [data-testid="stMetricValue"] {
+        font-size: 1.5rem !important;
+    }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    [data-testid="stVerticalBlockBorderWrapper"],
+    .stDownloadButton button {
+        transition: none !important;
+    }
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
+# --------------------------------------------------
+# DASHBOARD HEADING
+# --------------------------------------------------
+
 st.title("📊 AI Learning Dashboard")
 
 st.write(
@@ -33,7 +237,10 @@ st.write(
 st.divider()
 
 
-# Retrieve all learner profiles
+# --------------------------------------------------
+# RETRIEVE LEARNER PROFILES
+# --------------------------------------------------
+
 learners = get_all_learners()
 
 if not learners:
@@ -42,29 +249,53 @@ if not learners:
 
 else:
 
-    # Subject selection
-    st.subheader("📚 Select Your Learning Subject")
+    # Keep the latest learner profile for each subject
+    learners_sorted = sorted(
+        learners,
+        key=lambda item: int(item["id"]),
+        reverse=True
+    )
 
     unique_learners = {}
 
-    for learner_item in learners:
-        unique_learners[
-            learner_item["subject"].strip().lower()
-        ] = learner_item
+    for learner_item in learners_sorted:
+
+        subject_key = learner_item["subject"].strip().lower()
+
+        if subject_key not in unique_learners:
+            unique_learners[subject_key] = learner_item
 
     learner_options = list(unique_learners.values())
 
-    selected_subject = st.selectbox(
-        "Choose a subject to view its dashboard",
-        options=learner_options,
-        format_func=lambda item: (
-            f"{item['subject']} (Learner ID: {item['id']})"
+
+    # --------------------------------------------------
+    # SUBJECT SELECTION
+    # --------------------------------------------------
+
+    with st.container(border=True):
+
+        st.subheader("📚 Select Your Learning Subject")
+
+        selected_subject = st.selectbox(
+            "Choose a subject to view its dashboard",
+            options=learner_options,
+            format_func=lambda item: (
+                f"{item['subject']} (Learner ID: {item['id']})"
+            ),
+            key="dashboard_subject_selector"
         )
-    )
 
-    learner = selected_subject
+        learner = selected_subject
 
-    # Get selected learner data
+        st.success(
+            f"Selected Subject: {learner['subject']}"
+        )
+
+
+    # --------------------------------------------------
+    # RETRIEVE SELECTED LEARNER DATA
+    # --------------------------------------------------
+
     quiz_history = get_quiz_history(learner["id"])
 
     study_plan = get_latest_study_plan(learner["id"])
@@ -74,26 +305,52 @@ else:
     if study_plan:
         progress_data = get_study_progress(study_plan["id"])
 
+
+    # --------------------------------------------------
+    # LEARNER PROFILE
+    # --------------------------------------------------
+
     st.divider()
 
-    # Learner Profile
     st.subheader("👤 Learner Profile")
 
-    col1, col2 = st.columns(2)
+    with st.container(border=True):
 
-    with col1:
-        st.write(f"**Subject:** {learner['subject']}")
-        st.write(f"**Learning Goal:** {learner['learning_goal']}")
-        st.write(f"**Current Level:** {learner['current_level']}")
+        col1, col2 = st.columns(2)
 
-    with col2:
-        st.write(f"**Target Duration:** {learner['target_days']} days")
-        st.write(f"**Daily Study Time:** {learner['daily_hours']} hours")
-        st.write(f"**Learner ID:** {learner['id']}")
+        with col1:
+
+            st.write(f"**📚 Subject:** {learner['subject']}")
+
+            st.write(
+                f"**🎯 Learning Goal:** {learner['learning_goal']}"
+            )
+
+            st.write(
+                f"**📊 Current Level:** {learner['current_level']}"
+            )
+
+        with col2:
+
+            st.write(
+                f"**📅 Target Duration:** {learner['target_days']} days"
+            )
+
+            st.write(
+                f"**⏰ Daily Study Time:** {learner['daily_hours']} hours"
+            )
+
+            st.write(
+                f"**🆔 Learner ID:** {learner['id']}"
+            )
+
+
+    # --------------------------------------------------
+    # STUDY PLAN PROGRESS
+    # --------------------------------------------------
 
     st.divider()
 
-    # Study Plan Progress
     st.subheader("📅 Study Plan Progress")
 
     if study_plan:
@@ -101,42 +358,66 @@ else:
         total_days = learner["target_days"]
 
         completed_days = sum(
-            1 for completed in progress_data.values() if completed
+            1 for completed in progress_data.values()
+            if completed
         )
 
-        remaining_days = max(total_days - completed_days, 0)
+        remaining_days = max(
+            total_days - completed_days,
+            0
+        )
 
         completion_percentage = (
             completed_days / total_days
         ) * 100 if total_days else 0
 
-        col1, col2, col3 = st.columns(3)
 
-        col1.metric("📚 Total Study Days", total_days)
-        col2.metric("✅ Completed Days", completed_days)
-        col3.metric("⏳ Remaining Days", remaining_days)
+        with st.container(border=True):
 
-        st.markdown(
-            f"**Overall Completion: {completion_percentage:.1f}%**"
-        )
+            col1, col2, col3 = st.columns(3)
 
-        st.progress(completion_percentage / 100)
+            with col1:
+                st.metric(
+                    "📚 Total Study Days",
+                    total_days
+                )
 
-        if completed_days == total_days:
-            st.success(
-                "🎉 Congratulations! You completed your entire study plan!"
+            with col2:
+                st.metric(
+                    "✅ Completed Days",
+                    completed_days
+                )
+
+            with col3:
+                st.metric(
+                    "⏳ Remaining Days",
+                    remaining_days
+                )
+
+            st.write(
+                f"**Overall Completion: {completion_percentage:.1f}%**"
             )
 
-        elif completed_days > 0:
-            st.info(
-                f"Great progress! You have completed "
-                f"{completed_days} out of {total_days} study days."
-            )
+            st.progress(completion_percentage / 100)
 
-        else:
-            st.info(
-                "Start your learning journey by completing Day 1!"
-            )
+            if completed_days == total_days:
+
+                st.success(
+                    "🎉 Congratulations! You completed your entire study plan!"
+                )
+
+            elif completed_days > 0:
+
+                st.info(
+                    f"Great progress! You have completed "
+                    f"{completed_days} out of {total_days} study days."
+                )
+
+            else:
+
+                st.info(
+                    "Start your learning journey by completing Day 1!"
+                )
 
     else:
 
@@ -145,9 +426,13 @@ else:
             "Generate a personalized study plan to track progress."
         )
 
+
+    # --------------------------------------------------
+    # QUIZ PERFORMANCE
+    # --------------------------------------------------
+
     st.divider()
 
-    # Quiz Performance
     st.subheader("🏆 Quiz Performance")
 
     if quiz_history:
@@ -174,11 +459,28 @@ else:
 
         best_accuracy = max(valid_accuracies, default=0)
 
-        col1, col2, col3 = st.columns(3)
 
-        col1.metric("📝 Total Quiz Attempts", total_attempts)
-        col2.metric("📈 Average Accuracy", f"{average_accuracy:.1f}%")
-        col3.metric("🥇 Best Accuracy", f"{best_accuracy:.1f}%")
+        with st.container(border=True):
+
+            col1, col2, col3 = st.columns(3)
+
+            with col1:
+                st.metric(
+                    "📝 Total Quiz Attempts",
+                    total_attempts
+                )
+
+            with col2:
+                st.metric(
+                    "📈 Average Accuracy",
+                    f"{average_accuracy:.1f}%"
+                )
+
+            with col3:
+                st.metric(
+                    "🥇 Best Accuracy",
+                    f"{best_accuracy:.1f}%"
+                )
 
     else:
 
@@ -187,7 +489,11 @@ else:
             "your performance here."
         )
 
-    # Strong and Weak Topic Analysis
+
+    # --------------------------------------------------
+    # STRONG AND WEAK TOPIC ANALYSIS
+    # --------------------------------------------------
+
     st.divider()
 
     st.subheader("🎯 Strong and Weak Topic Analysis")
@@ -214,7 +520,9 @@ else:
                 }
 
             topic_stats[topic_key]["score"] += row["score"]
+
             topic_stats[topic_key]["total"] += row["total_questions"]
+
 
         for topic in topic_stats.values():
 
@@ -236,77 +544,107 @@ else:
             else:
                 weak_topics.append(topic_result)
 
+
         col1, col2, col3 = st.columns(3)
 
         with col1:
 
-            st.markdown("### 🟢 Strong Topics")
+            with st.container(border=True):
 
-            if strong_topics:
-                for topic in strong_topics:
-                    st.success(
-                        f"{topic['topic']} — "
-                        f"{topic['accuracy']:.1f}%"
-                    )
-            else:
-                st.info("No strong topics identified yet.")
+                st.markdown("### 🟢 Strong Topics")
+
+                if strong_topics:
+
+                    for topic in strong_topics:
+
+                        st.success(
+                            f"{topic['topic']} — "
+                            f"{topic['accuracy']:.1f}%"
+                        )
+
+                else:
+
+                    st.info("No strong topics identified yet.")
+
 
         with col2:
 
-            st.markdown("### 🟡 Needs Improvement")
+            with st.container(border=True):
 
-            if improving_topics:
-                for topic in improving_topics:
-                    st.warning(
-                        f"{topic['topic']} — "
-                        f"{topic['accuracy']:.1f}%"
-                    )
-            else:
-                st.info("No topics in this category yet.")
+                st.markdown("### 🟡 Needs Improvement")
+
+                if improving_topics:
+
+                    for topic in improving_topics:
+
+                        st.warning(
+                            f"{topic['topic']} — "
+                            f"{topic['accuracy']:.1f}%"
+                        )
+
+                else:
+
+                    st.info("No topics in this category yet.")
+
 
         with col3:
 
-            st.markdown("### 🔴 Weak Topics")
+            with st.container(border=True):
 
-            if weak_topics:
-                for topic in weak_topics:
-                    st.error(
-                        f"{topic['topic']} — "
-                        f"{topic['accuracy']:.1f}%"
-                    )
-            else:
-                st.info("No weak topics identified yet.")
+                st.markdown("### 🔴 Weak Topics")
 
-        # Personalized recommendations
+                if weak_topics:
+
+                    for topic in weak_topics:
+
+                        st.error(
+                            f"{topic['topic']} — "
+                            f"{topic['accuracy']:.1f}%"
+                        )
+
+                else:
+
+                    st.info("No weak topics identified yet.")
+
+
+        # --------------------------------------------------
+        # PERSONALIZED RECOMMENDATIONS
+        # --------------------------------------------------
+
         st.divider()
 
         st.subheader("💡 Personalized Learning Recommendations")
 
-        for topic in weak_topics:
-            st.error(
-                f"**{topic['topic']}:** Your accuracy is "
-                f"{topic['accuracy']:.1f}%. "
-                "Review the basics, study worked examples, "
-                "and practise more questions."
-            )
+        with st.container(border=True):
 
-        for topic in improving_topics:
-            st.warning(
-                f"**{topic['topic']}:** You are making progress. "
-                "Revise important concepts and take another quiz "
-                "to improve your accuracy."
-            )
+            for topic in weak_topics:
 
-        for topic in strong_topics:
-            st.success(
-                f"**{topic['topic']}:** Great work! "
-                "Continue practising to maintain your performance."
-            )
+                st.error(
+                    f"**{topic['topic']}:** Your accuracy is "
+                    f"{topic['accuracy']:.1f}%. "
+                    "Review the basics, study worked examples, "
+                    "and practise more questions."
+                )
 
-        st.caption(
-            "Topic classifications are based on saved quiz results "
-            "for the selected subject profile."
-        )
+            for topic in improving_topics:
+
+                st.warning(
+                    f"**{topic['topic']}:** You are making progress. "
+                    "Revise important concepts and take another quiz "
+                    "to improve your accuracy."
+                )
+
+            for topic in strong_topics:
+
+                st.success(
+                    f"**{topic['topic']}:** Great work! "
+                    "Continue practising to maintain your performance."
+                )
+
+            st.caption(
+                "Topic classifications are based on saved quiz results "
+                "for the selected subject profile."
+            )
 
     else:
 
@@ -315,7 +653,11 @@ else:
             "and weak topics."
         )
 
-    # Quiz Accuracy Progress Chart
+
+    # --------------------------------------------------
+    # QUIZ ACCURACY PROGRESS CHART
+    # --------------------------------------------------
+
     if quiz_history:
 
         st.divider()
@@ -340,57 +682,66 @@ else:
 
         chart_df = pd.DataFrame(chart_data)
 
-        st.line_chart(
-            chart_df.set_index("Quiz Attempt")["Accuracy"],
-            y_label="Accuracy (%)"
-        )
+        with st.container(border=True):
 
-    # Downloadable PDF Learning Progress Report
+            st.line_chart(
+                chart_df.set_index("Quiz Attempt")["Accuracy"],
+                y_label="Accuracy (%)"
+            )
+
+
+    # --------------------------------------------------
+    # DOWNLOADABLE PDF LEARNING PROGRESS REPORT
+    # --------------------------------------------------
+
     st.divider()
 
     st.subheader("📄 Download Learning Progress Report")
 
-    st.write(
-        "Generate a PDF report containing your learner profile, "
-        "study progress, quiz performance and quiz history."
-    )
+    with st.container(border=True):
 
-    # Fill missing study days as incomplete.
-    # This ensures the PDF uses the learner's full target duration.
-    report_progress = {
-        day: progress_data.get(day, False)
-        for day in range(1, learner["target_days"] + 1)
-    }
-
-    try:
-
-        pdf_data = generate_progress_report(
-            learner=learner,
-            study_plan=study_plan,
-            study_progress=report_progress,
-            quiz_history=quiz_history
+        st.write(
+            "Generate a PDF report containing your learner profile, "
+            "study progress, quiz performance and quiz history."
         )
 
-        filename = (
-            f"{learner['subject'].replace(' ', '_')}"
-            f"_Learning_Progress_Report.pdf"
-        )
+        # Fill missing study days as incomplete.
+        # This ensures the PDF uses the learner's full target duration.
 
-        st.download_button(
-            label="📥 Download My Progress Report",
-            data=pdf_data,
-            file_name=filename,
-            mime="application/pdf",
-            use_container_width=True
-        )
+        report_progress = {
+            day: progress_data.get(day, False)
+            for day in range(1, learner["target_days"] + 1)
+        }
 
-        st.caption(
-            "Your report is generated using the saved information "
-            "for the selected subject."
-        )
+        try:
 
-    except Exception as error:
+            pdf_data = generate_progress_report(
+                learner=learner,
+                study_plan=study_plan,
+                study_progress=report_progress,
+                quiz_history=quiz_history
+            )
 
-        st.error(
-            f"Unable to generate the PDF report: {error}"
-        )
+            filename = (
+                f"{learner['subject'].replace(' ', '_')}"
+                f"_Learning_Progress_Report.pdf"
+            )
+
+            st.download_button(
+                label="📥 Download My Progress Report",
+                data=pdf_data,
+                file_name=filename,
+                mime="application/pdf",
+                use_container_width=True
+            )
+
+            st.caption(
+                "Your report is generated using the saved information "
+                "for the selected subject."
+            )
+
+        except Exception as error:
+
+            st.error(
+                f"Unable to generate the PDF report: {error}"
+            )

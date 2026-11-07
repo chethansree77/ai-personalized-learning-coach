@@ -1,173 +1,10 @@
 
-/* Welcome banner */
-.hero-banner {
-    background: linear-gradient(
-        120deg,
-        #7544C8,
-        #3478E5,
-        #E45AAB,
-        #F59B55
-    );
+/* =========================================
+   AI PERSONALIZED LEARNING COACH
+   Professional Gradient Theme
+========================================= */
 
-    padding: 38px;
-    border-radius: 22px;
-    color: white;
-    margin-bottom: 28px;
-
-    box-shadow: 0 10px 28px rgba(80, 55, 160, 0.25);
-
-    transition: all 0.35s ease;
-}
-
-/* Strong hover effect */
-.hero-banner:hover {
-    transform: translateY(-7px) scale(1.015);
-
-    box-shadow: 0 18px 38px rgba(80, 55, 160, 0.38);
-}
-
-/* Main banner heading */
-.hero-banner h1 {
-    color: white;
-    font-size: 36px;
-    margin-bottom: 12px;
-}
-
-/* Banner subtitle */
-.hero-banner h3 {
-    color: #FFF0F8;
-    font-size: 23px;
-    margin-bottom: 12px;
-}
-
-/* Banner description */
-.hero-banner p {
-    color: white;
-    font-size: 16px;
-}
-
-/* Learning Journey section */
-.learning-section {
-    background: linear-gradient(
-        120deg,
-        #E8DFFF,
-        #DCEBFF,
-        #FFE1F0
-    );
-
-    padding: 28px;
-    border-radius: 20px;
-    margin-top: 25px;
-    margin-bottom: 25px;
-
-    box-shadow: 0 8px 22px rgba(100, 80, 160, 0.16);
-
-    transition: all 0.35s ease;
-}
-
-/* Strong hover effect */
-.learning-section:hover {
-    transform: translateY(-7px) scale(1.015);
-
-    box-shadow: 0 16px 32px rgba(100, 80, 160, 0.28);
-}
-
-/* Section heading */
-.learning-section h2 {
-    color: #5836A3;
-    font-size: 26px;
-}
-
-/* Section description */
-.learning-section p {
-    color: #394567;
-    font-size: 16px;
-}
-
-/* Getting Started card */
-.getting-started {
-    background: linear-gradient(
-        120deg,
-        #FFE5B4,
-        #FFD6E8,
-        #E4D9FF
-    );
-
-    padding: 24px;
-    border-radius: 18px;
-    margin-top: 25px;
-
-    box-shadow: 0 8px 22px rgba(180, 100, 140, 0.18);
-
-    transition: all 0.35s ease;
-}
-
-/* Hover effect */
-.getting-started:hover {
-    transform: translateY(-7px) scale(1.015);
-
-    box-shadow: 0 16px 32px rgba(180, 100, 140, 0.3);
-}
-
-/* Message text */
-.getting-started p {
-    color: #633B73;
-    font-size: 17px;
-    font-weight: 600;
-    margin: 0;
-}
-
-/* Sidebar background */
-[data-testid="stSidebar"] {
-    background: linear-gradient(
-        180deg,
-        #5536A5,
-        #3478E5,
-        #D65AAB
-    );
-}
-
-/* Sidebar text */
-[data-testid="stSidebar"] p,
-[data-testid="stSidebar"] h1,
-[data-testid="stSidebar"] h2,
-[data-testid="stSidebar"] h3 {
-    color: white;
-}
-
-/* Sidebar spacing */
-[data-testid="stSidebar"] .block-container {
-    padding-top: 35px;
-}
-
-/* Sidebar welcome card */
-.sidebar-welcome {
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    border-radius: 15px;
-    padding: 16px;
-    margin-top: 15px;
-
-    transition: all 0.35s ease;
-}
-
-/* Sidebar card hover */
-.sidebar-welcome:hover {
-    background: rgba(255, 255, 255, 0.30);
-    transform: translateY(-5px) scale(1.04);
-    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-}
-
-/* Sidebar welcome text */
-.sidebar-welcome p {
-    color: white !important;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 1.6;
-    margin: 5px 0;
-}
-
-/* Main page background */
+/* Main application background */
 .stApp {
     background: linear-gradient(
         135deg,
@@ -183,23 +20,23 @@
     padding-bottom: 2rem;
 }
 
+/* =========================================
+   MAIN APPLICATION TITLE
+========================================= */
 
-/* Main application title */
 .main-title {
     font-size: 38px;
     font-weight: 800;
     display: inline-block;
     margin-bottom: 18px;
-    transition: all 0.35s ease;
+    transition: transform 0.3s ease;
 }
 
-/* Keep emoji in its original colour */
 .title-emoji {
     display: inline-block;
     margin-right: 8px;
 }
 
-/* Gradient only on title text */
 .title-text {
     background: linear-gradient(
         90deg,
@@ -213,10 +50,439 @@
     color: transparent;
 }
 
-/* Smooth hover effect */
 .main-title:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
 }
 
+/* =========================================
+   WELCOME HERO BANNER
+========================================= */
 
+.hero-banner {
+    background: linear-gradient(
+        120deg,
+        #7544C8,
+        #3478E5,
+        #E45AAB,
+        #F59B55
+    );
 
+    padding: 38px;
+    border-radius: 22px;
+    color: white;
+    margin-bottom: 28px;
+
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    box-shadow: 0 8px 24px rgba(80, 55, 160, 0.20);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.hero-banner:hover {
+    transform: translateY(-4px);
+
+    box-shadow: 0 13px 30px rgba(80, 55, 160, 0.28);
+}
+
+.hero-banner h1 {
+    color: white;
+    font-size: 36px;
+    margin-bottom: 12px;
+}
+
+.hero-banner h3 {
+    color: #FFF0F8;
+    font-size: 23px;
+    margin-bottom: 12px;
+}
+
+.hero-banner p {
+    color: white;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+/* =========================================
+   LEARNING JOURNEY SECTION
+========================================= */
+
+.learning-section {
+    background: linear-gradient(
+        120deg,
+        #E8DFFF,
+        #DCEBFF,
+        #FFE1F0
+    );
+
+    padding: 28px;
+    border-radius: 20px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+
+    border: 1px solid rgba(117, 68, 200, 0.12);
+
+    box-shadow: 0 6px 20px rgba(100, 80, 160, 0.13);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.learning-section:hover {
+    transform: translateY(-4px);
+
+    box-shadow: 0 12px 27px rgba(100, 80, 160, 0.22);
+}
+
+.learning-section h2 {
+    color: #5836A3;
+    font-size: 26px;
+}
+
+.learning-section p {
+    color: #394567;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+/* =========================================
+   GETTING STARTED CARD
+========================================= */
+
+.getting-started {
+    background: linear-gradient(
+        120deg,
+        #FFE5B4,
+        #FFD6E8,
+        #E4D9FF
+    );
+
+    padding: 24px;
+    border-radius: 18px;
+    margin-top: 25px;
+
+    border: 1px solid rgba(228, 90, 171, 0.15);
+
+    box-shadow: 0 6px 20px rgba(180, 100, 140, 0.15);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.getting-started:hover {
+    transform: translateY(-4px);
+
+    box-shadow: 0 12px 27px rgba(180, 100, 140, 0.24);
+}
+
+.getting-started p {
+    color: #633B73;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+[data-testid="stSidebar"] {
+    background: linear-gradient(
+        180deg,
+        #5536A5,
+        #3478E5,
+        #D65AAB
+    );
+}
+
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    color: white;
+}
+
+[data-testid="stSidebar"] .block-container {
+    padding-top: 35px;
+}
+
+/* Sidebar welcome card */
+.sidebar-welcome {
+    background: rgba(255, 255, 255, 0.16);
+
+    border: 1px solid rgba(255, 255, 255, 0.28);
+
+    border-radius: 15px;
+    padding: 16px;
+    margin-top: 15px;
+
+    transition:
+        transform 0.3s ease,
+        background 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.sidebar-welcome:hover {
+    background: rgba(255, 255, 255, 0.25);
+
+    transform: translateY(-3px);
+
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+}
+
+.sidebar-welcome p {
+    color: white !important;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.6;
+    margin: 5px 0;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 768px) {
+
+    .main-title {
+        font-size: 29px;
+    }
+
+    .hero-banner {
+        padding: 25px;
+        border-radius: 18px;
+    }
+
+    .hero-banner h1 {
+        font-size: 28px;
+    }
+
+    .hero-banner h3 {
+        font-size: 20px;
+    }
+
+    .learning-section {
+        padding: 22px;
+    }
+
+    .learning-section h2 {
+        font-size: 22px;
+    }
+
+    .getting-started {
+        padding: 20px;
+    }
+}
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .hero-banner,
+    .learning-section,
+    .getting-started,
+    .sidebar-welcome,
+    .main-title {
+        transition: none;
+    }
+
+    .hero-banner:hover,
+    .learning-section:hover,
+    .getting-started:hover,
+    .sidebar-welcome:hover,
+    .main-title:hover {
+        transform: none;
+    }
+}
+
+/* =========================================
+   SIDEBAR NAVIGATION IMPROVEMENTS
+========================================= */
+
+/* Navigation links */
+[data-testid="stSidebarNav"] a {
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    padding: 11px 14px !important;
+    border-radius: 10px !important;
+    margin-bottom: 5px !important;
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease !important;
+}
+
+/* Navigation hover */
+[data-testid="stSidebarNav"] a:hover {
+    background: rgba(255, 255, 255, 0.22) !important;
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Selected navigation page */
+[data-testid="stSidebarNav"] a[aria-current="page"] {
+    background: rgba(255, 255, 255, 0.30) !important;
+    border-left: 4px solid #FFE5B4 !important;
+    font-weight: 750 !important;
+}
+
+/* Sidebar navigation heading */
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    font-size: 25px !important;
+    font-weight: 750 !important;
+}
+
+/* =========================================
+   IMPROVE TEXT READABILITY
+========================================= */
+
+/* Normal paragraph text */
+.stApp p {
+    font-size: 17px;
+    line-height: 1.75;
+}
+
+/* Main page headings */
+.stApp h1 {
+    font-size: 34px;
+    font-weight: 750;
+}
+
+.stApp h2 {
+    font-size: 27px;
+    font-weight: 700;
+}
+
+.stApp h3 {
+    font-size: 22px;
+    font-weight: 650;
+}
+
+/* Form labels */
+.stApp label {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+}
+
+/* Input and select text */
+.stApp input,
+.stApp textarea,
+.stApp [data-baseweb="select"] {
+    font-size: 16px !important;
+}
+
+/* Buttons */
+.stApp button {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.stApp button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(80, 55, 160, 0.16);
+}
+
+/* =========================================
+   SMALL SCREEN READABILITY
+========================================= */
+
+@media (max-width: 768px) {
+    .stApp p {
+        font-size: 16px;
+    }
+
+    .stApp h1 {
+        font-size: 28px;
+    }
+
+    .stApp h2 {
+        font-size: 23px;
+    }
+
+    .stApp h3 {
+        font-size: 20px;
+    }
+
+    [data-testid="stSidebarNav"] a {
+        font-size: 16px !important;
+    }
+}
+
+/* =========================================
+   FINAL SIDEBAR POLISH
+========================================= */
+
+/* Balanced navigation spacing */
+[data-testid="stSidebarNav"] a {
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    padding: 10px 14px !important;
+    margin-bottom: 3px !important;
+    border-radius: 9px !important;
+}
+
+/* Smooth hover */
+[data-testid="stSidebarNav"] a:hover {
+    background: rgba(255, 255, 255, 0.20) !important;
+    transform: translateX(3px);
+}
+
+/* Selected page */
+[data-testid="stSidebarNav"] a[aria-current="page"] {
+    background: rgba(255, 255, 255, 0.28) !important;
+    border-left: 4px solid #FFE5B4 !important;
+    padding-left: 12px !important;
+}
+
+/* Sidebar welcome card */
+.sidebar-welcome {
+    background: rgba(255, 255, 255, 0.13);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 16px;
+}
+
+/* Welcome text */
+.sidebar-welcome p {
+    font-size: 17px !important;
+    line-height: 1.7 !important;
+}
+
+/* Force sidebar expand/collapse arrows to white */
+[data-testid="stSidebarCollapseButton"],
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="stSidebar"] button[kind="header"],
+button[kind="header"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+}
+
+/* Make the complete arrow icon white */
+[data-testid="stSidebarCollapseButton"] svg,
+[data-testid="stSidebarCollapsedControl"] svg,
+[data-testid="stSidebar"] button[kind="header"] svg,
+button[kind="header"] svg {
+    filter: brightness(0) invert(1) !important;
+    opacity: 1 !important;
+}
+
+/* Remove hover background */
+[data-testid="stSidebarCollapseButton"]:hover,
+[data-testid="stSidebarCollapsedControl"]:hover,
+button[kind="header"]:hover {
+    background: transparent !important;
+}

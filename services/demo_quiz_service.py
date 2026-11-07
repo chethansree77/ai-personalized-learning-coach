@@ -1,5 +1,11 @@
 
-def generate_demo_quiz(subject, topic, level, question_type):
+def generate_demo_quiz(
+    subject,
+    topic,
+    level,
+    question_type,
+    difficulty="Medium"
+):
 
     if question_type == "Maths / Aptitude":
         return [

@@ -1,27 +1,18 @@
-
 import json
 import re
 import time
-
 from services.gemini_service import get_gemini_client
-
-
 # Models are attempted in order.
 GEMINI_MODELS = [
     "gemini-3.5-flash-lite",
     "gemini-flash-lite-latest",
     "gemini-flash-latest"
 ]
-
 MAX_RETRIES = 2
 RETRY_DELAY = 3
-
-
 def is_temporary_error(error):
     """Identify errors that may resolve after retrying."""
-
     error_text = str(error).lower()
-
     temporary_errors = [
         "503",
         "unavailable",
@@ -39,19 +30,70 @@ def is_temporary_error(error):
         message in error_text
         for message in temporary_errors
     )
-
-
-def generate_quiz(subject, topic, level, question_type):
-
+def generate_quiz(
+    subject,
+    topic,
+    level,
+    question_type,
+    difficulty="Medium",
+    previous_questions=None
+):
     client = get_gemini_client()
-
+    # Difficulty-specific instructions
+    difficulty_instructions = {
+        "Easy": """
+        DIFFICULTY: EASY
+        - Create basic beginner-friendly questions.
+        - Focus on fundamental concepts and definitions.
+        - Use simple examples.
+        - Test basic understanding.
+        """,
+        "Medium": """
+        DIFFICULTY: MEDIUM
+        - Create moderately challenging questions.
+        - Test understanding and application of concepts.
+        - Include practical examples and simple reasoning.
+        - Require the learner to think before answering.
+        """,
+        "Hard": """
+        DIFFICULTY: HARD
+        - Create advanced and challenging questions.
+        - Test deep understanding and problem-solving.
+        - Include practical scenarios and multi-step reasoning.
+        - Use application-based questions.
+        - Avoid basic definition-only questions.
+        """
+    }
+    selected_difficulty = difficulty_instructions.get(
+        difficulty,
+        difficulty_instructions["Medium"]
+    )
+    # Prepare instructions to avoid repeating previous questions.
+    previous_question_text = ""
+    if previous_questions:
+        previous_question_text = "\n".join(
+            f"- {question}"
+            for question in previous_questions
+        )
+    if previous_question_text:
+        repetition_instruction = f"""
+        PREVIOUSLY ASKED QUESTIONS:
+        {previous_question_text}
+        IMPORTANT:
+        - Do not repeat these questions.
+        - Do not simply change numbers or variable names.
+        - Create five genuinely new questions.
+        - Test different aspects of the same topic where possible.
+        """
+    else:
+        repetition_instruction = """
+        This is a fresh quiz attempt.
+        Generate five different questions about the selected topic.
+        """
     if question_type == "Maths / Aptitude":
-
         explanation_instructions = """
         Create a structured MATHS / APTITUDE explanation.
-
         Return these fields:
-
         "formula": The main formula used. If no formula is needed, use "Not required".
         "symbols": Explain every symbol and mathematical value.
         "given_values": List the values provided in the question.
@@ -60,14 +102,12 @@ def generate_quiz(subject, topic, level, question_type):
         "shortcut": Give a shortcut method if useful. Otherwise explain that no shortcut is needed.
         "final_answer": State the correct answer clearly.
         "memory_tip": Give a short tip to remember the method.
-
         IMPORTANT:
         - Never skip calculation steps.
         - Use the exact values from the question.
-        - Make the solution suitable for a beginner.
+        - Make the solution suitable for the selected difficulty.
         - Check the calculation before returning the answer.
         """
-
         explanation_format = """
         "explanation": {
             "formula": "Formula here",
@@ -80,22 +120,17 @@ def generate_quiz(subject, topic, level, question_type):
             "memory_tip": "Short memory tip"
         }
         """
-
     else:
-
         explanation_instructions = """
         Create a structured THEORY explanation.
-
         Return these fields:
-
         "concept": Explain the correct answer in simple language.
         "key_points": A list of important points.
         "example": Give a practical example where useful.
         "option_analysis": Explain why each incorrect option is wrong.
         "memory_tip": Give a short examination memory tip.
-
         IMPORTANT:
-        - Use beginner-friendly language.
+        - Use clear language suitable for the selected difficulty.
         - Explain the concept, not just the answer.
         - Keep the explanation clear and useful.
         """
@@ -114,34 +149,51 @@ def generate_quiz(subject, topic, level, question_type):
             "memory_tip": "Short memory tip"
         }
         """
-
     prompt = f"""
     You are an expert personal learning coach and tutor.
-
     Create exactly 5 multiple-choice questions.
-
+    LEARNER DETAILS:
     Subject: {subject}
     Topic: {topic}
     Learner Level: {level}
     Question Type: {question_type}
-
+    Selected Difficulty: {difficulty}
+    DIFFICULTY INSTRUCTIONS:
+    {selected_difficulty}
+    QUESTION FRESHNESS:
+    {repetition_instruction}
     QUESTION REQUIREMENTS:
-
     1. Create exactly five relevant questions.
-    2. Each question must have exactly four options.
-    3. Each question must have exactly one correct answer.
-    4. Avoid confusing or ambiguous questions.
-    5. Use simple language appropriate for the learner.
-    6. Do not reveal correct answers in the question.
-    7. Do not include images in the question data.
-    8. Verify that each correct answer matches its explanation.
-
+    2. Each question must have exactly four options: A, B, C and D.
+    3. There must be exactly ONE unambiguously correct option.
+    4. Solve or independently reason through each question before
+       selecting its correct answer.
+    5. For Python code questions, mentally execute the code and
+       verify the exact output before creating the options.
+    6. For maths questions, calculate the answer independently
+       and double-check every calculation.
+    7. Ensure the correct answer is actually present among
+       the four options.
+    8. Ensure no two options express the same correct answer.
+    9. Verify that the correct_answer field matches the
+       actual correct option.
+    10. Verify that the explanation supports the selected answer.
+    11. For theory questions, ensure the concept and option
+        analysis are factually accurate.
+    12. For maths questions, ensure final_answer matches
+        the correct option exactly.
+    13. Avoid ambiguous, misleading or incomplete questions.
+    14. Match the selected difficulty.
+    15. Do not reveal correct answers in the question.
+    16. Keep all questions related to the selected subject and topic.
+    FINAL SELF-CHECK BEFORE RETURNING JSON:
+    - Solve all five questions again.
+    - Check every option against the actual answer.
+    - Correct any question with missing or incorrect options.
+    - Return JSON only after all five questions pass these checks.
     EXPLANATION REQUIREMENTS:
-
     {explanation_instructions}
-
     Return ONLY valid JSON in this format:
-
     {{
         "questions": [
             {{
@@ -158,50 +210,34 @@ def generate_quiz(subject, topic, level, question_type):
         ]
     }}
     """
-
     response = None
     last_error = None
-
     # Try alternative Gemini models if one is unavailable.
     for model in GEMINI_MODELS:
-
         for attempt in range(MAX_RETRIES):
-
             try:
-
                 response = client.models.generate_content(
                     model=model,
                     contents=prompt
                 )
-
                 if not response.text:
                     raise ValueError(
                         "Gemini returned an empty response."
                     )
-
                 break
-
             except Exception as error:
-
                 last_error = error
-
                 if is_temporary_error(error):
-
                     if attempt < MAX_RETRIES - 1:
                         time.sleep(RETRY_DELAY)
                         continue
-
                     # Move to the next model.
                     break
-
                 # Do not repeatedly retry permanent errors.
                 break
-
         if response is not None and response.text:
             break
-
     if response is None or not response.text:
-
         if last_error and is_temporary_error(last_error):
 
             raise RuntimeError(
@@ -234,9 +270,12 @@ def generate_quiz(subject, topic, level, question_type):
             raise ValueError(
                 "The AI must generate exactly 5 questions."
             )
-
         for question in questions:
-
+            # Each question must be a dictionary.
+            if not isinstance(question, dict):
+                raise ValueError(
+                    "A question must be a valid JSON object."
+                )
             required_keys = [
                 "question",
                 "options",
@@ -249,6 +288,13 @@ def generate_quiz(subject, topic, level, question_type):
                     "A question is missing required information."
                 )
 
+            # Validate question text.
+            if not isinstance(question["question"], str) or not question["question"].strip():
+                raise ValueError(
+                    "Question text cannot be empty."
+                )
+
+            # Validate answer options.
             if not isinstance(question["options"], dict):
                 raise ValueError(
                     "Question options must be an object."
@@ -261,20 +307,41 @@ def generate_quiz(subject, topic, level, question_type):
                     "Each question must have exactly four options."
                 )
 
+            option_values = list(question["options"].values())
+
+            if not all(
+                isinstance(option, str) and option.strip()
+                for option in option_values
+            ):
+                raise ValueError(
+                    "Answer options cannot be empty."
+                )
+
+            # Reject duplicate option text.
+            normalized_options = [
+                re.sub(r"\s+", " ", option).strip().casefold()
+                for option in option_values
+            ]
+
+            if len(set(normalized_options)) != 4:
+                raise ValueError(
+                    "Duplicate answer options were detected."
+                )
+
+            # Validate the correct answer key.
             if question["correct_answer"] not in [
                 "A", "B", "C", "D"
             ]:
-                raise ValueError("Invalid correct answer.")
-
+                raise ValueError(
+                    "Invalid correct answer."
+                )
+            # Validate explanation structure.
             explanation = question["explanation"]
-
             if not isinstance(explanation, dict):
                 raise ValueError(
                     "Explanation must be structured data."
                 )
-
             if question_type == "Maths / Aptitude":
-
                 required_explanation_fields = [
                     "formula",
                     "symbols",
@@ -285,9 +352,7 @@ def generate_quiz(subject, topic, level, question_type):
                     "final_answer",
                     "memory_tip"
                 ]
-
             else:
-
                 required_explanation_fields = [
                     "concept",
                     "key_points",
@@ -295,7 +360,6 @@ def generate_quiz(subject, topic, level, question_type):
                     "option_analysis",
                     "memory_tip"
                 ]
-
             if not all(
                 field in explanation
                 for field in required_explanation_fields
@@ -303,14 +367,13 @@ def generate_quiz(subject, topic, level, question_type):
                 raise ValueError(
                     "The explanation is missing required sections."
                 )
-
             if not str(explanation["memory_tip"]).strip():
-                raise ValueError("Memory tip is empty.")
-
-        return questions
-
+                raise ValueError(
+                    "Memory tip is empty."
+                )
     except Exception as error:
-
         raise RuntimeError(
             f"Quiz response validation failed: {error}"
         ) from error
+    # Return the validated questions to the Practice Quiz page.
+    return questions

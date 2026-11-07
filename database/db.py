@@ -2,6 +2,36 @@
 import sqlite3
 import json
 from pathlib import Path
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
+
+
+IST = ZoneInfo("Asia/Kolkata")
+
+
+def _convert_utc_to_ist(value):
+    """Convert SQLite's UTC timestamp text into readable Indian Standard Time."""
+    if not value:
+        return value
+
+    try:
+        timestamp = datetime.fromisoformat(str(value))
+        # SQLite CURRENT_TIMESTAMP stores UTC as a timezone-naive string.
+        if timestamp.tzinfo is None:
+            timestamp = timestamp.replace(tzinfo=timezone.utc)
+        return timestamp.astimezone(IST).strftime("%Y-%m-%d %H:%M:%S IST")
+    except (TypeError, ValueError):
+        # Preserve unexpected timestamp formats rather than breaking the page.
+        return value
+
+
+def _convert_record_timestamps(record):
+    """Return a dictionary with timestamp columns displayed in IST."""
+    result = dict(record)
+    for field in ("created_at", "completed_at"):
+        if field in result and result[field]:
+            result[field] = _convert_utc_to_ist(result[field])
+    return result
 
 
 # Database file location
@@ -134,7 +164,7 @@ def get_latest_learner():
     if learner is None:
         return None
 
-    return dict(learner)
+    return _convert_record_timestamps(learner)
 
 
 # Get all learner profiles
@@ -152,7 +182,7 @@ def get_all_learners():
     learners = cursor.fetchall()
     connection.close()
 
-    return [dict(learner) for learner in learners]
+    return [_convert_record_timestamps(learner) for learner in learners]
 
 
 # Save generated study plan
@@ -203,7 +233,7 @@ def get_latest_study_plan(learner_id):
     if plan is None:
         return None
 
-    return dict(plan)
+    return _convert_record_timestamps(plan)
 
 
 # Create study progress table
@@ -431,4 +461,4 @@ def get_quiz_history(learner_id):
     connection.commit()
     connection.close()
 
-    return history
+    return [_convert_record_timestamps(attempt) for attempt in history]
